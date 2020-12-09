@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "280233375796",
+    "firebase_url": "https://tubes-uts.firebaseio.com",
+    "project_id": "tubes-uts",
+    "storage_bucket": "tubes-uts.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:280233375796:android:9c8599294e6dbb69ee7261",
+        "android_client_info": {
+          "package_name": "com.frumentiusdaneswara.tubes_uts"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "280233375796-qvkc7vnq468booiuhd46s909m5qcd4jc.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAoOO2X5LQX6uCjaM7Ns4F6i7VzQ5MjKN8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "280233375796-qvkc7vnq468booiuhd46s909m5qcd4jc.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".menuadminActivity">
+
+    <com.google.android.material.textview.MaterialTextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="25dp"
+        android:textSize="30dp"
+        style="@style/TextAppearance.AppCompat.Title"
+        android:text="Halaman Admin"
+        android:textAlignment="center"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="150dp"
+        android:orientation="horizontal">
+
+        <ImageButton
+            android:layout_width="200dp"
+            android:layout_height="200dp"
+            android:background="@drawable/ic_baseline_monetization_on_24"
+            android:id="@+id/btn_transaksi"/>
+
+        <ImageButton
+            android:layout_width="200dp"
+            android:layout_height="200dp"
+            android:background="@drawable/ic_baseline_home_work_24"
+            android:id="@+id/btn_kos"/>
+
+    </LinearLayout>
+
+
+
+
+</LinearLayout>

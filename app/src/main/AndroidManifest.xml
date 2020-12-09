@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.frumentiusdaneswara.tubes_uts">
+
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.INTERNET" />
+
+    <application
+        android:allowBackup="true"
+        android:icon="@drawable/ic_bapakos"
+        android:label="@string/app_name"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:supportsRtl="true"
+        android:theme="@style/AppTheme">
+        <activity android:name=".CreateKosActivity"/>
+        <activity android:name=".EditKosActivity" />
+        <activity android:name=".EditTransaksiActivity" />
+        <activity android:name=".KosAdminActivity" />
+        <activity android:name=".TransaksiAdminActivity" />
+        <activity android:name=".menuadminActivity" />
+        <activity android:name=".TransaksiActivity" />
+        <activity android:name=".VerificationActivity" />
+        <activity android:name=".MapsActivity" />
+        <activity android:name=".showData" />
+        <activity android:name=".searchActivity" />
+        <activity android:name=".EditProfileActivity" />
+        <activity android:name=".RegisterUser" />
+        <activity android:name=".SplashActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity android:name=".ProfileActivity" />
+        <activity android:name=".LoginUser" />
+
+        <service android:name=".MessagingService">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
+            </intent-filter>
+        </service>
+    </application>
+
+</manifest>

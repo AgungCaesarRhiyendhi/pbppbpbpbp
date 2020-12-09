@@ -1,0 +1,23 @@
+<resources>
+    <string name="app_name">Bapakos</string>
+    <string name="email">Email</string>
+    <string name="sign_in">Sign In</string>
+    <string name="password">Password</string>
+    <string name="welcome">Welcome!</string>
+    <string name="don_t_have_an_account_sign_up">Don\'t have an account? Sign Up</string>
+    <string name="sign_up">Sign Up</string>
+    <string name="tidak_memiliki_akun_sign_up">Tidak memiliki akun? Sign Up</string>
+    <string name="hello">Hello!</string>
+    <string name="phone_no">Phone No.</string>
+    <string name="full_name">Full Name</string>
+    <string name="edit_profile">Edit Profile</string>
+    <string name="sign_out">Sign Out</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="profile">Profile</string>
+
+    <string name="nama_app">BAPAKOS</string>
+    <string name="search_kos">Cari Nama Kos</string>
+    <string name="mapbox_access_token">pk.eyJ1IjoiYWd1bmdjYWVzYXJyaGl5ZW5kaGkiLCJhIjoiY2tnNHJkcmRuMDN5NDJ5cjA3cG5qb2JpeCJ9.ONnCmaQQqUSjn7T91aTk0w</string>
+    <string name="lokasi_kost">Lokasi Kost</string>
+</resources>
