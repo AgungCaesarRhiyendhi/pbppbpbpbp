@@ -3,6 +3,7 @@ package com.frumentiusdaneswara.tubes_uts;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
@@ -123,13 +124,16 @@ public class CreateKosActivity extends AppCompatActivity {
             public void onResponse(Call<KosResponse> call, Response<KosResponse> response) {
                 Toast.makeText(CreateKosActivity.this, response.body().getMessage(), Toast.LENGTH_SHORT).show();
                 progressDialog.dismiss();
-                onBackPressed();
+                Intent intent = new Intent(CreateKosActivity.this,KosAdminActivity.class);
+                startActivity(intent);
             }
 
             @Override
             public void onFailure(Call<KosResponse> call, Throwable t) {
                 Toast.makeText(CreateKosActivity.this, "Kesalahan Jaringan", Toast.LENGTH_SHORT).show();
                 progressDialog.dismiss();
+                Intent intent = new Intent(CreateKosActivity.this,KosAdminActivity.class);
+                startActivity(intent);
             }
         });
     }

@@ -138,7 +138,7 @@ public class DetailKosFragment extends DialogFragment {
 
             @Override
             public void onFailure(Call<KosResponse2> call, Throwable t) {
-                Toast.makeText(getContext(), "kesalahan Jaringan", Toast.LENGTH_SHORT).show();
+//                Toast.makeText(getContext(), "kesalahan Jaringan", Toast.LENGTH_SHORT).show();
                 progressDialog.dismiss();
             }
         });
@@ -156,7 +156,7 @@ public class DetailKosFragment extends DialogFragment {
 
             @Override
             public void onFailure(Call<KosResponse> call, Throwable t) {
-                Toast.makeText(getContext(), "kesalahan Jaringan", Toast.LENGTH_SHORT).show();
+//                Toast.makeText(getContext(), "kesalahan Jaringan", Toast.LENGTH_SHORT).show();
             }
         });
     }

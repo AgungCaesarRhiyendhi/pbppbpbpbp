@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
@@ -44,13 +45,13 @@ public class LoginUser extends AppCompatActivity {
         btnSignIn       = (MaterialButton)findViewById(R.id.btnSignIn);
 
         firebaseAuth = FirebaseAuth.getInstance();
-        final FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
+        loadPreferences();
 
-        if(firebaseAuth.getCurrentUser() != null && firebaseUser.isEmailVerified()){
-            Toast.makeText(LoginUser.this,"Welcome Back!", Toast.LENGTH_SHORT).show();
-            startActivity(new Intent(getApplicationContext(),searchActivity.class));
-            finish();
-        }
+//        if(firebaseAuth.getCurrentUser() != null && firebaseUser.isEmailVerified()){
+//            Toast.makeText(LoginUser.this,"Welcome Back!", Toast.LENGTH_SHORT).show();
+//            startActivity(new Intent(getApplicationContext(),searchActivity.class));
+//            finish();
+//        }
 
         btnSignIn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -68,9 +69,16 @@ public class LoginUser extends AppCompatActivity {
                     return;
                 }
 
+
                 if(password.length() < 6){
                     passwordText.setError("Password must be >= 6 Characters");
                     return;
+                }
+
+                if(email.equals("admin") && password.equals("admin123"))
+                {
+                    Toast.makeText(LoginUser.this, "Logged In as Admin Successfully", Toast.LENGTH_SHORT).show();
+                    startActivity(new Intent(getApplicationContext(),menuadminActivity.class));
                 }
 
                 else{
@@ -78,9 +86,12 @@ public class LoginUser extends AppCompatActivity {
                         @Override
                         public void onComplete(@NonNull Task<AuthResult> task) {
                             if (task.isSuccessful()){
-                                if (firebaseUser != null && firebaseUser.isEmailVerified()){
+                                final FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
+                                System.out.println("BBBBBBBBBBBBBBBAAACCCCCCCCCCCCCCAAAAAAAAAAAAAAAAAAAAA"+firebaseUser);
+                                if (firebaseUser.isEmailVerified()){
                                     Toast.makeText(LoginUser.this, "Logged In Successfully", Toast.LENGTH_SHORT).show();
                                     startActivity(new Intent(getApplicationContext(),searchActivity.class));
+                                    savePreferences();
                                     finish();
                                 }
                                 else{
@@ -106,5 +117,26 @@ public class LoginUser extends AppCompatActivity {
         });
     }
 
+    private void savePreferences() {
+        firebaseAuth = FirebaseAuth.getInstance();
+        final FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
 
+        SharedPreferences sharedPref = getSharedPreferences("myKey", MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPref.edit();
+        editor.putString("idUserLogin", firebaseUser.getUid());
+        editor.apply();
+    }
+
+    private void loadPreferences() {
+        SharedPreferences preferences = getSharedPreferences("myKey", MODE_PRIVATE);
+        firebaseAuth = FirebaseAuth.getInstance();
+        final FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
+        String id = preferences.getString("idUserLogin","-");
+        if (preferences!=null && !id.isEmpty() && !id.equals("-") ){
+            Toast.makeText(LoginUser.this, "Welcome Back!", Toast.LENGTH_SHORT).show();
+            startActivity(new Intent(getApplicationContext(), searchActivity.class));
+            finish();
+        }
+
+    }
 }

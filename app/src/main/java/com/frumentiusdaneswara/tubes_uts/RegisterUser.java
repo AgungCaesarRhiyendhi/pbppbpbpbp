@@ -13,6 +13,7 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -24,16 +25,27 @@ import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FirebaseFirestore;
+
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.util.HashMap;
+import java.util.Map;
 
 public class RegisterUser extends AppCompatActivity {
 
     TextInputLayout nameText, phoneNumber, emailText, passwordText;
+    TextView result; //buat temp-nya hashcode
     MaterialButton btnSignUp, btnSignIn;
     FirebaseAuth firebaseAuth;
+    FirebaseFirestore firebaseFirestore;
     ProgressBar progressBar;
-//    User user;
+    //    User user;
     private String CHANNEL_ID = "Channel 1";
     private static final String TAG = "RegisterUser";
+    private String userID;
+    private String  encryptPass;
 
 
     @Override
@@ -51,8 +63,10 @@ public class RegisterUser extends AppCompatActivity {
         passwordText    = (TextInputLayout) findViewById(R.id.inputPassword);
         btnSignUp       = (MaterialButton)findViewById(R.id.btnSignUp);
         btnSignIn       = (MaterialButton)findViewById(R.id.btnSignIn);
+        result          = findViewById(R.id.passwordHash);
 
         firebaseAuth = FirebaseAuth.getInstance();
+        firebaseFirestore = FirebaseFirestore.getInstance();
 //        if(firebaseAuth.getCurrentUser() != null){
 //            startActivity(new Intent(getApplicationContext(),LoginUser.class));
 //            finish();
@@ -65,6 +79,7 @@ public class RegisterUser extends AppCompatActivity {
                 String password = passwordText.getEditText().getText().toString().trim();
                 String name = nameText.getEditText().getText().toString().trim();
                 String phone = phoneNumber.getEditText().getText().toString().trim();
+
 
                 if(TextUtils.isEmpty(name)){
                     nameText.setError("Full name is empty");
@@ -103,9 +118,28 @@ public class RegisterUser extends AppCompatActivity {
                                 @Override
                                 public void onSuccess(Void aVoid) {
                                     Toast.makeText(RegisterUser.this, "Verification Email Has Been Sent.", Toast.LENGTH_SHORT).show();
-//                                    Toast.makeText(RegisterUser.this, "User Registered", Toast.LENGTH_SHORT).show();
-        //                            addUser();
-                                    savePreferences();
+                                    userID = firebaseAuth.getCurrentUser().getUid();
+                                    computeMD5Hash(passwordText.toString()); //encrypt password
+
+                                    DocumentReference documentReference = firebaseFirestore.collection("users").document(userID); //bikin collection namanya users di firestore
+                                    Map<String,Object> user = new HashMap<>();
+                                    user.put("name", name);
+                                    user.put("phone",phone);
+                                    user.put("email",email);
+                                    user.put("password",result.getText().toString().trim()); //masukin hasil encrypt ke atribut password
+                                    user.put("profileImage",null);
+                                    documentReference.set(user).addOnSuccessListener(new OnSuccessListener<Void>(){
+                                        @Override
+                                        public void onSuccess(Void aVoid) {
+                                            Log.d(TAG,"onSuccess: Profile Created" + userID);
+                                        }
+                                    }).addOnFailureListener(new OnFailureListener() {
+                                        @Override
+                                        public void onFailure(@NonNull Exception e) {
+                                            Log.d(TAG, "onFailure: " + e.toString());
+                                        }
+                                    });
+//                                    savePreferences();
                                     startActivity(new Intent(getApplicationContext(),VerificationActivity.class));
                                     finish();
                                 }
@@ -136,16 +170,41 @@ public class RegisterUser extends AppCompatActivity {
 
     }
 
-    private void savePreferences() {
-        nameText        = (TextInputLayout) findViewById(R.id.inputNama);
-        phoneNumber     = (TextInputLayout) findViewById(R.id.inputPhone);
+//    private void savePreferences() {
+//        nameText        = (TextInputLayout) findViewById(R.id.inputNama);
+//        phoneNumber     = (TextInputLayout) findViewById(R.id.inputPhone);
+//
+//        SharedPreferences sharedPref = getSharedPreferences("myKey", MODE_PRIVATE);
+//        SharedPreferences.Editor editor = sharedPref.edit();
+//        editor.putString("fullName", nameText.getEditText().getText().toString());
+//        editor.putString("phoneNumber", phoneNumber.getEditText().getText().toString());
+//        editor.putString("email", emailText.getEditText().getText().toString());
+//        editor.putString("password", passwordText.getEditText().getText().toString());
+//        editor.apply();
+//    }
 
-        SharedPreferences sharedPref = getSharedPreferences("myKey", MODE_PRIVATE);
-        SharedPreferences.Editor editor = sharedPref.edit();
-        editor.putString("fullName", nameText.getEditText().getText().toString());
-        editor.putString("phoneNumber", phoneNumber.getEditText().getText().toString());
-        editor.putString("email", emailText.getEditText().getText().toString());
-        editor.putString("password", passwordText.getEditText().getText().toString());
-        editor.apply();
+    public void computeMD5Hash(String password)
+    {
+        try {
+            // create md5 hash
+            MessageDigest digest = java.security.MessageDigest.getInstance("MD5");
+            digest.update(password.getBytes());
+            byte[] messageDigest = digest.digest();
+
+            StringBuffer MD5Hash = new StringBuffer();
+            for (int i=0; i<messageDigest.length; i++)
+            {
+                String h = Integer.toHexString(0xFF & messageDigest[i]);
+                while (h.length() <2 )
+                    h = "0"+h;
+                MD5Hash.append(h);
+            }
+            System.out.println(MD5Hash);//ngecek MD5Hash bener ga
+            result.setText(MD5Hash);// ngeset MD5hash ke textview result
+        }
+        catch (NoSuchAlgorithmException e)
+        {
+            e.printStackTrace();
+        }
     }
 }

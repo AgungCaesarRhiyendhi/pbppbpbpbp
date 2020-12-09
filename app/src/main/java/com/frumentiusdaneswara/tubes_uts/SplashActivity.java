@@ -25,7 +25,7 @@ public class SplashActivity extends Activity {
         handler.postDelayed(new Runnable() {
             @Override
             public void run() {
-                Intent intent=new Intent(SplashActivity.this, menuadminActivity.class);
+                Intent intent=new Intent(SplashActivity.this, LoginUser.class);
                 startActivity(intent);
                 finish();
 

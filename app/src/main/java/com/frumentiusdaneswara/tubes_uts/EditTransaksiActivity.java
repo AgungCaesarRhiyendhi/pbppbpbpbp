@@ -51,6 +51,7 @@ public class EditTransaksiActivity extends AppCompatActivity {
             }
         });
 
+
         etNama = findViewById(R.id.etNama);
         etNohp = findViewById(R.id.etNohp);
         exposedDropdownmetode = findViewById(R.id.edmetode);
@@ -119,6 +120,7 @@ public class EditTransaksiActivity extends AppCompatActivity {
             public void onResponse(Call<TransaksiResponse2> call, Response<TransaksiResponse2> response) {
                 etNama.setText(response.body().getUsers().getNamapemesan());
                 etNohp.setText(response.body().getUsers().getNohppemesan());
+                etHarga.setText(response.body().getUsers().getHargakos());
                 smetode = response.body().getUsers().getMetodepembayaran();
                 for(int i=0; i<sametode.length; i++)
                     if(sametode[i].equals(smetode))

@@ -1,25 +1,42 @@
 package com.frumentiusdaneswara.tubes_uts;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 
 import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Base64;
+import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.SetOptions;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class EditProfileActivity extends AppCompatActivity {
     private SharedPreferences preferences;
@@ -29,7 +46,10 @@ public class EditProfileActivity extends AppCompatActivity {
     private String phoneNumberPref = "";
     TextInputLayout nameText, phoneNumberText, emailText;
 
+    FirebaseFirestore firebaseFirestore;
     MaterialButton btnSave,btnCancel;
+    String userID;
+    private static final String TAG = "UpdateUser";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,34 +64,74 @@ public class EditProfileActivity extends AppCompatActivity {
         materialToolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                startActivity(new Intent(EditProfileActivity.this, ProfileActivity.class));
                 finish();
             }
         });
 
-        nameText        = (TextInputLayout) findViewById(R.id.inputNama);
-        phoneNumberText = (TextInputLayout) findViewById(R.id.inputPhone);
-        emailText       = (TextInputLayout) findViewById(R.id.inputEmail);
         btnSave         = (MaterialButton) findViewById(R.id.btnSave);
         btnCancel       = (MaterialButton) findViewById(R.id.btnCancel);
 
         FirebaseUser user;
+        firebaseFirestore = FirebaseFirestore.getInstance();
+
 
         user = FirebaseAuth.getInstance().getCurrentUser();
         if(user != null){
-            String email = user.getEmail();
             TextInputEditText inputEditTextEmail = findViewById(R.id.inputEditTextEmail);
-            inputEditTextEmail.setText(email);
-            loadPreferences();//load data dari shared preferences
+            TextInputEditText editTextName = findViewById(R.id.inputEditTextName);
+            TextInputEditText editTextPhone = findViewById(R.id.inputEditTextPhone);
+
+            System.out.println(user);
+            userID = user.getUid();
+
+            DocumentReference documentReference = firebaseFirestore.collection("users").document(userID);
+            documentReference.addSnapshotListener(this, new EventListener<DocumentSnapshot>() {
+                @Override
+                public void onEvent(@Nullable DocumentSnapshot value, @Nullable FirebaseFirestoreException error) {
+                    inputEditTextEmail.setText(value.getString("email"));
+                    editTextName.setText(value.getString("name"));
+                    editTextPhone.setText(value.getString("phone"));
+                }
+            });
+
         }
         else{
             TextInputEditText inputEditTextEmail = findViewById(R.id.inputEditTextEmail);
+            TextInputEditText editTextName = findViewById(R.id.inputEditTextName);
+            TextInputEditText editTextPhone = findViewById(R.id.inputEditTextPhone);
             inputEditTextEmail.setText("-");
+            editTextName.setText("-");
+            editTextPhone.setText("-");
         }
 
         btnSave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                savePreferences();
+                TextInputEditText inputEditTextEmail = findViewById(R.id.inputEditTextEmail);
+                TextInputEditText editTextName = findViewById(R.id.inputEditTextName);
+                TextInputEditText editTextPhone = findViewById(R.id.inputEditTextPhone);
+                String email = inputEditTextEmail.getText().toString().trim();
+                String name = editTextName.getText().toString().trim();
+                String phone = editTextPhone.getText().toString().trim();
+
+                DocumentReference documentReference = firebaseFirestore.collection("users").document(userID); //bikin collection namanya users di firestore
+                Map<String,Object> user = new HashMap<>();
+                user.put("name", name);
+                user.put("phone",phone);
+                user.put("email",email);
+
+                documentReference.set(user, SetOptions.merge()).addOnSuccessListener(new OnSuccessListener<Void>(){
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        Log.d(TAG,"onSuccess: Profile Created" + userID);
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.d(TAG, "onFailure: " + e.toString());
+                    }
+                });
                 finish();
             }
         });

@@ -37,7 +37,7 @@ public class EditKosActivity extends AppCompatActivity {
 
 
     private ImageButton ibBack;
-    private TextInputEditText etNamak, etAlamatk, etHargak, etNohpk, etImageIDk, etLongitudek, etLatitudek;
+    private EditText etNamak, etAlamatk, etHargak, etNohpk, etImageIDk, etLongitudek, etLatitudek;
     private MaterialButton btnCancel, btnUpdate;
     private ProgressDialog progressDialog;
     private String userId;
@@ -48,7 +48,7 @@ public class EditKosActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_edit_transaksi);
+        setContentView(R.layout.activity_edit_kos);
         Intent intent = getIntent();
         userId = intent.getStringExtra("id_kos");
 
@@ -63,7 +63,7 @@ public class EditKosActivity extends AppCompatActivity {
         });
 
 
-        kos = (Kos) getIntent().getSerializableExtra("kos");
+
         etNamak = findViewById(R.id.etNamakos);
         etAlamatk = findViewById(R.id.etAlamat);
         etHargak = findViewById(R.id.etHarga);
@@ -74,9 +74,9 @@ public class EditKosActivity extends AppCompatActivity {
         btnCancel = findViewById(R.id.btnCancel);
         btnUpdate = findViewById(R.id.btnUPDATE);
 
-//        etImageIDk.setEnabled(false);
-//        etLatitudek.setEnabled(false);
-//        etLongitudek.setEnabled(false);
+        etImageIDk.setEnabled(false);
+        etLatitudek.setEnabled(false);
+        etLongitudek.setEnabled(false);
 
         btnCancel.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -141,17 +141,19 @@ public class EditKosActivity extends AppCompatActivity {
         add.enqueue(new Callback<KosResponse2>() {
             @Override
             public void onResponse(Call<KosResponse2> call, Response<KosResponse2> response) {
-                Longitude = response.body().getUsers().getLongitude();
-                Latitude = response.body().getUsers().getLatitude();
 
-                String etlongitude = Double.toString(Longitude);
-                String etlatitude = Double.toString(Latitude);
 
                 etNamak.setText(response.body().getUsers().getNamakos());
                 etAlamatk.setText(response.body().getUsers().getAlamatkos());
                 etHargak.setText(response.body().getUsers().getHargakos());
                 etNohpk.setText(response.body().getUsers().getNohpkos());
                 etImageIDk.setText(response.body().getUsers().getImageID());
+
+                Longitude = response.body().getUsers().getLongitude();
+                Latitude = response.body().getUsers().getLatitude();
+
+                String etlongitude = Double.toString(Longitude);
+                String etlatitude = Double.toString(Latitude);
                 etLatitudek.setText(etlatitude);
                 etLongitudek.setText(etlongitude);
 

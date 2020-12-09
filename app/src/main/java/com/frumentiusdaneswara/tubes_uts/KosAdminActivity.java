@@ -80,7 +80,7 @@ public class KosAdminActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<KosResponse> call, Throwable t) {
-                Toast.makeText(KosAdminActivity.this, "Kesalahan Jaringan", Toast.LENGTH_SHORT).show();
+//                Toast.makeText(KosAdminActivity.this, "Kesalahan Jaringan", Toast.LENGTH_SHORT).show();
                 swipeRefresh.setRefreshing(false);
             }
         });

@@ -9,7 +9,7 @@ import android.widget.ImageButton;
 
 public class menuadminActivity extends AppCompatActivity {
 
-    private ImageButton btntransaksi, btnKos;
+    private ImageButton btntransaksi, btnKos, btnsignout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -18,6 +18,7 @@ public class menuadminActivity extends AppCompatActivity {
 
         btntransaksi = findViewById(R.id.btn_transaksi);
         btnKos = findViewById(R.id.btn_kos);
+        btnsignout = findViewById(R.id.btn_signout);
 
         btntransaksi.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -36,7 +37,12 @@ public class menuadminActivity extends AppCompatActivity {
             }
         });
 
-
+        btnsignout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent i2 = new Intent(menuadminActivity.this,LoginUser.class);
+            }
+        });
 
 
     }

@@ -36,6 +36,14 @@
 
     </LinearLayout>
 
+    <ImageButton
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        android:layout_marginTop="30dp"
+        android:background="@drawable/ic_baseline_highlight_off_24"
+        android:id="@+id/btn_signout"
+        android:layout_gravity="center"/>
+
 
 
 

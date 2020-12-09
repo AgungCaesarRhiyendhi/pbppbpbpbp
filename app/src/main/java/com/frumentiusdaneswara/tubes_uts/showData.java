@@ -68,7 +68,7 @@ public class showData extends AppCompatActivity {
             public void onClick(View view) {
                 Bundle data = new Bundle();
                 data.putSerializable("kos", kos);
-                Intent intent = new Intent(view.getContext(),TransaksiActivity.class);
+                Intent intent = new Intent(showData.this,TransaksiActivity.class);
                 intent.putExtras(data);
                 view.getContext().startActivity(intent);
 

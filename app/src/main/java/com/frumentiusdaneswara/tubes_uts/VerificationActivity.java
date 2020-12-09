@@ -40,7 +40,6 @@ public class VerificationActivity extends AppCompatActivity {
 
         btnResendCode = findViewById(R.id.btnResend);
         btnContinue = (MaterialButton) findViewById(R.id.btnContinue);
-        loadPreferences();
         firebaseAuth = FirebaseAuth.getInstance();
         FirebaseUser user = firebaseAuth.getCurrentUser();
 
@@ -48,35 +47,21 @@ public class VerificationActivity extends AppCompatActivity {
             btnResendCode.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    firebaseAuth.createUserWithEmailAndPassword(email,password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                    FirebaseUser user = firebaseAuth.getCurrentUser();
+                    user.sendEmailVerification().addOnSuccessListener(new OnSuccessListener<Void>() {
                         @Override
-                        public void onComplete(@NonNull Task<AuthResult> task) {
-                            if (task.isSuccessful()){
-
-                                //send verification link
-
-                                FirebaseUser user = firebaseAuth.getCurrentUser();
-                                user.sendEmailVerification().addOnSuccessListener(new OnSuccessListener<Void>() {
-                                    @Override
-                                    public void onSuccess(Void aVoid) {
-                                        Toast.makeText(VerificationActivity.this, "Verification Email Has Been Sent.", Toast.LENGTH_SHORT).show();
-                                        startActivity(new Intent(getApplicationContext(),VerificationActivity.class));
-                                        finish();
-                                    }
-                                }).addOnFailureListener(new OnFailureListener() {
-                                    @Override
-                                    public void onFailure(@NonNull Exception e) {
-                                        Log.d("tag", "onFailure : Email not sent" + e.getMessage());
-                                    }
-                                });
-
-                            }
-                            else{
-                                Toast.makeText(VerificationActivity.this, "Error!" + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
-                            }
-
+                        public void onSuccess(Void aVoid) {
+                            Toast.makeText(VerificationActivity.this, "Verification Email Has Been Sent.", Toast.LENGTH_SHORT).show();
+                            startActivity(new Intent(getApplicationContext(),VerificationActivity.class));
+                            finish();
+                        }
+                    }).addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            Log.d("tag", "onFailure : Email not sent" + e.getMessage());
                         }
                     });
+
                 }
             });
         }
@@ -91,12 +76,4 @@ public class VerificationActivity extends AppCompatActivity {
 
     }
 
-    private void loadPreferences() {
-        preferences = getSharedPreferences("myKey", Activity.MODE_PRIVATE);
-        if (preferences!=null){
-            email = preferences.getString("email", "-");
-            password = preferences.getString("password", "-");
-
-        }
-    }
 }
